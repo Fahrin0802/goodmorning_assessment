@@ -24,7 +24,9 @@ protected:
 
 public:
     MyRequest(int maxBins);
-    
+
+    void setTimingsMap(const std::map<std::string, std::vector<double>>& newTimingsMap);
+
     double mean(const std::string& uri);
 
     double standardDeviation(const std::string& uri);

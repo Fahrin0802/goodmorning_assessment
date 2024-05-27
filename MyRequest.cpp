@@ -35,6 +35,10 @@ void MyRequest::finish(){
     std::cout << "Finished request. Time taken: " << elapsedTime << " ms" << std::endl;
 }
 
+void MyRequest::setTimingsMap(const std::map<std::string, std::vector<double>>& newTimingsMap) {
+    timingsMap = newTimingsMap;
+}
+
 double MyRequest::mean(const std::string& uri){
     if (timingsMap.find(uri) == timingsMap.end())
         return -1.0; 
