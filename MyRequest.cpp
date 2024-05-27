@@ -9,6 +9,9 @@
 #include "matplotlibcpp.h"
 namespace plt = matplotlibcpp;
 
+MyRequest::MyRequest(int maxBins) {
+    this->maxBins = maxBins;
+}
 
 void MyRequest::start(const std::string& uri){
     std::cout << "Starting request for URI: " << uri << std::endl;
@@ -54,4 +57,62 @@ double MyRequest::standardDeviation(const std::string& uri){
     double sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
     double stdev = std::sqrt(sq_sum / times.size());
     return stdev;
+}
+
+std::vector<std::pair<double, double>> MyRequest::getNormalizedHistogram(const std::string& uri) {
+    if (timingsMap.find(uri) == timingsMap.end()) {
+        std::cerr << "No data for URI: " << uri << std::endl;
+        return {};
+    }
+
+    const std::vector<double>& times = timingsMap.at(uri);
+    if (times.empty())
+        return {};
+
+    // Determine the range of the data
+    auto min_it = std::min_element(times.begin(), times.end());
+    auto max_it = std::max_element(times.begin(), times.end());
+    double minValue = *min_it;
+    double maxValue = *max_it;
+
+    // Compute bin width and count
+    int binCount = std::min(maxBins, static_cast<int>(times.size()));
+    double binWidth = (maxValue - minValue) / binCount;
+
+    // Create bins
+    std::vector<int> bins(binCount, 0);
+    for (double time : times) {
+        int binIndex = std::min(static_cast<int>((time - minValue) / binWidth), binCount - 1);
+        bins[binIndex]++;
+    }
+
+    // Normalize the histogram
+    double total = times.size();
+    std::vector<std::pair<double, double>> histogram;
+    for (int i = 0; i < binCount; ++i) {
+        double binStart = minValue + i * binWidth;
+        double frequency = bins[i] / total;
+        histogram.emplace_back(binStart, frequency);
+    }
+
+    return histogram;
+}
+
+void MyRequest::drawHistogram(const std::string& uri) {
+    auto histogram = getNormalizedHistogram(uri);
+    if (histogram.empty()) {
+        return;
+    }
+
+    std::vector<double> bins, frequencies;
+    for (const auto& entry : histogram) {
+        bins.push_back(entry.first);
+        frequencies.push_back(entry.second);
+    }
+
+    plt::hist(frequencies, bins.size());
+    plt::title("Normalized Histogram of processing times for URI: " + uri);
+    plt::xlabel("Time (ms)");
+    plt::ylabel("Normalized Frequency");
+    plt::show();
 }

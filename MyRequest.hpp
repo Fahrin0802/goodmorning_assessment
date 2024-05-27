@@ -20,6 +20,8 @@ protected:
 
     void finish() override;
 
+    std::vector<std::pair<double, double>> getNormalizedHistogram(const std::string& uri);
+
 public:
     MyRequest(int maxBins);
     
@@ -28,6 +30,7 @@ public:
     double standardDeviation(const std::string& uri);
 
     void drawHistogram(const std::string& uri);
+
 };
 
 #endif // MYREQUEST_HPP

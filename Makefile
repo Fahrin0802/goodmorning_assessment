@@ -1,12 +1,18 @@
 # Compiler
 CXX = g++
-CXXFLAGS = -Wall -std=c++11
+
+# Add the Python include path here
+# Find path by python3-config --include
+CXXFLAGS = -Wall -std=c++11 -I/usr/include/python3.8    # Add necessary flags for Python and Matplotlib
+PYFLAGS = -lpython3.8
+
 
 # Targets
 all: app
 
 app: main.o Request.o MyRequest.o
-	$(CXX) $(CXXFLAGS) main.o Request.o MyRequest.o -o app
+	$(CXX) $(CXXFLAGS) main.o Request.o MyRequest.o -o app $(PYFLAGS)
+
 
 main.o: main.cpp MyRequest.hpp
 	$(CXX) $(CXXFLAGS) -c main.cpp -o main.o
