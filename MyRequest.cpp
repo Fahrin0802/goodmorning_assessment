@@ -118,6 +118,7 @@ void MyRequest::drawHistogram(const std::string& uri) {
         std::cout << "bin_start: " << entry.first << " || frequency: " << entry.second << std::endl;
     }
 
+    // Using python's matplotlib library, plot the histogram
     plt::hist(frequencies, bins.size());
     plt::title("Normalized Histogram of processing times for URI: " + uri);
     plt::xlabel("Time (ms)");
