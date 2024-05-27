@@ -1,3 +1,6 @@
+#ifndef REQUEST_HPP
+#define REQUEST_HPP
+
 #include <string>
 #include <thread>
 #include <chrono>
@@ -44,3 +47,4 @@ public:
     std::string process(const std::string& uri);
 };
 
+#endif // REQUEST_HPP
