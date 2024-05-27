@@ -94,9 +94,9 @@ std::vector<std::pair<double, double>> MyRequest::getNormalizedHistogram(const s
     double total = times.size();
     std::vector<std::pair<double, double>> histogram;
     for (int i = 0; i < binCount; ++i) {
-        double binStart = minValue + i * binWidth;
+        double binCenter = (minValue + i * binWidth) + (binWidth/2.0);
         double frequency = bins[i] / total;
-        histogram.emplace_back(binStart, frequency);
+        histogram.emplace_back(binCenter, frequency);
     }
 
     return histogram;
@@ -115,11 +115,12 @@ void MyRequest::drawHistogram(const std::string& uri) {
     for (const auto& entry : histogram) {
         bins.push_back(entry.first);
         frequencies.push_back(entry.second);
-        std::cout << "bin_start: " << entry.first << " || frequency: " << entry.second << std::endl;
+        std::cout << "bin_center: " << entry.first << " || frequency: " << entry.second << std::endl;
     }
 
     // Using python's matplotlib library, plot the histogram
-    plt::hist(frequencies, bins.size());
+    // plt::hist(timingsMap[uri], binCount); // This doesn't draw normalized histograms
+    plt::bar(bins, frequencies);
     plt::title("Normalized Histogram of processing times for URI: " + uri);
     plt::xlabel("Time (ms)");
     plt::ylabel("Normalized Frequency");
