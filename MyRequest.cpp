@@ -5,8 +5,8 @@
 #include <numeric> // for std::accumulate
 #include <cmath> //for transform
 #include <algorithm>
-
 #include "matplotlibcpp.h"
+
 namespace plt = matplotlibcpp;
 
 MyRequest::MyRequest(int maxBins) {
@@ -76,7 +76,7 @@ std::vector<std::pair<double, double>> MyRequest::getNormalizedHistogram(const s
     double maxValue = *max_it;
 
     // Compute bin width and count
-    int binCount = std::min(maxBins, static_cast<int>(times.size()));
+    int binCount = std::min(maxBins, static_cast<int>(times.size()/2) + 1);
     double binWidth = (maxValue - minValue) / binCount;
 
     // Create bins
@@ -104,10 +104,14 @@ void MyRequest::drawHistogram(const std::string& uri) {
         return;
     }
 
+    std::cout << "-----------------------------------" << std::endl;
+    std::cout << "Ploting Histogram: " << std::endl;
+    
     std::vector<double> bins, frequencies;
     for (const auto& entry : histogram) {
         bins.push_back(entry.first);
         frequencies.push_back(entry.second);
+        std::cout << "bin_start: " << entry.first << " || frequency: " << entry.second << std::endl;
     }
 
     plt::hist(frequencies, bins.size());

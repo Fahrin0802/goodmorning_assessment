@@ -2,14 +2,15 @@
 
 int main()
 {
-    MyRequest request(10); // Maximum 10 bins
+    MyRequest request(50); // Maximum 10 bins
     std::string response = request.process("uri1");
     std::cout << response << std::endl;
 
     // Simulate more requests
     request.process("uri1");
     request.process("uri1");
-    request.process("uri2");
+    request.process("uri1");
+    request.process("uri1");
     request.process("uri2");
 
     // Print out the statistics
